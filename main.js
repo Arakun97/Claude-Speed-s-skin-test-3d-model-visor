@@ -16,12 +16,19 @@ function init() {
                 const light = new THREE.HemisphereLight(0xffffff, 0x444444);
                   scene.add(light);
 
-                    const loader = new THREE.OBJLoader();
-                      loader.load('model/claude.obj', (obj) => {
-                          model = obj.children[0];
-                              model.material = new THREE.MeshBasicMaterial({ color: 0x999999 });
-                                  scene.add(model);
-                                    });
+                    const mtlLoader = new THREE.MTLLoader();
+mtlLoader.setPath('model/');
+mtlLoader.load('claude.mtl', function(materials) {
+  materials.preload();
+
+  const objLoader = new THREE.OBJLoader();
+  objLoader.setMaterials(materials);
+  objLoader.setPath('model/');
+  objLoader.load('claude.obj', function(obj) {
+    model = obj;
+    scene.add(model);
+  });
+});
 
                                       animate();
                                       }
